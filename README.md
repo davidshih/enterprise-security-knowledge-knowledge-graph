@@ -43,6 +43,7 @@ PYTHONPATH=src python3 -m security_graph ingest \
 enterprise-security-knowledge-graph/
 ├── config/                 # Sources, access policy, and risk policy
 ├── data/sample/            # Safe synthetic input data
+├── design-system/          # Persisted UI tokens and interaction rules
 ├── docs/PLAN.md            # Full implementation plan
 ├── examples/queries.cypher # Analyst and attack-path queries
 ├── schema/graph-model.yaml # Canonical entity/relationship contract
@@ -56,7 +57,7 @@ enterprise-security-knowledge-graph/
 
 ## GitHub Pages 知識庫
 
-`website/` 提供 dependency-free 的靜態知識庫首頁，並由 `.github/workflows/pages.yml` 自動部署。每次 build 都會從目前版本的 plan、schema、queries、OpenAPI 與 policies 產生 knowledge bundle，避免網站內容和 repository 各自活在平行宇宙。
+`website/` 提供 dependency-free 的靜態知識庫首頁，視覺規則保存在 `design-system/`，並由 `.github/workflows/pages.yml` 自動部署。每次 build 都會從目前版本的 plan、schema、queries、OpenAPI 與 policies 產生 knowledge bundle，避免網站內容和 repository 各自活在平行宇宙。
 
 ```bash
 make site

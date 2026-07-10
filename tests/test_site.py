@@ -50,6 +50,22 @@ class SiteTests(unittest.TestCase):
             if href.startswith("#"):
                 self.assertIn(href.removeprefix("#"), page_ids)
 
+    def test_ui_contract_includes_accessible_responsive_foundations(self) -> None:
+        project_root = Path(__file__).resolve().parents[1]
+        html = (project_root / "website" / "index.html").read_text(encoding="utf-8")
+        css = (project_root / "website" / "styles.css").read_text(encoding="utf-8")
+
+        self.assertIn('<html lang="zh-Hant">', html)
+        self.assertIn('class="skip-link"', html)
+        self.assertIn('aria-controls="site-menu"', html)
+        self.assertIn('id="site-search"', html)
+        self.assertIn('aria-live="polite"', html)
+        self.assertIn(':focus-visible', css)
+        self.assertIn('min-height: 44px', css)
+        self.assertIn('@media (max-width: 760px)', css)
+        self.assertIn('@media (prefers-reduced-motion: reduce)', css)
+        self.assertIn('overflow-x: hidden', css)
+
 
 if __name__ == "__main__":
     unittest.main()
