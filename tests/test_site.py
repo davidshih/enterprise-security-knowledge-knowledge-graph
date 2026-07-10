@@ -66,6 +66,20 @@ class SiteTests(unittest.TestCase):
         self.assertIn('@media (prefers-reduced-motion: reduce)', css)
         self.assertIn('overflow-x: hidden', css)
 
+    def test_light_theme_does_not_include_legacy_dark_graph_surfaces(self) -> None:
+        project_root = Path(__file__).resolve().parents[1]
+        html = (project_root / "website" / "index.html").read_text(encoding="utf-8")
+        css = (project_root / "website" / "styles.css").read_text(encoding="utf-8")
+
+        self.assertNotIn('class="feature-card metric-card dark-card"', html)
+        self.assertNotIn('class="section-intro light-copy"', html)
+        self.assertNotIn('--dark:', css)
+        self.assertNotIn('--dark-surface:', css)
+        self.assertIn('.blue-card { background: #eaf4ff;', css)
+        self.assertIn('.evidence-section { background: var(--surface);', css)
+        self.assertIn('.quickstart {', css)
+        self.assertIn('background: var(--surface); color: var(--foreground);', css)
+
 
 if __name__ == "__main__":
     unittest.main()
