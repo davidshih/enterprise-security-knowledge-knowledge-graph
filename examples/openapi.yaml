@@ -1,0 +1,111 @@
+openapi: 3.1.0
+info:
+  title: Enterprise Security Knowledge Graph API
+  version: 0.1.0
+servers:
+  - url: https://security-graph.example.internal/v1
+paths:
+  /entities/{entity_id}:
+    get:
+      operationId: getEntity
+      summary: Get an entity with evidence and freshness metadata
+      parameters:
+        - name: entity_id
+          in: path
+          required: true
+          schema: {type: string}
+      responses:
+        "200":
+          description: Entity response
+          content:
+            application/json:
+              schema: {$ref: "#/components/schemas/Entity"}
+        "404": {description: Entity not found}
+  /entities/{entity_id}/neighbors:
+    get:
+      operationId: getNeighbors
+      summary: Run a bounded traversal from an entity
+      parameters:
+        - name: entity_id
+          in: path
+          required: true
+          schema: {type: string}
+        - name: relationship
+          in: query
+          schema: {type: string}
+        - name: depth
+          in: query
+          schema: {type: integer, minimum: 1, maximum: 6, default: 1}
+      responses:
+        "200": {description: Bounded neighbor results}
+  /attack-paths:
+    get:
+      operationId: listAttackPaths
+      summary: List ranked and evidence-backed attack paths
+      parameters:
+        - name: target_id
+          in: query
+          required: true
+          schema: {type: string}
+        - name: max_hops
+          in: query
+          schema: {type: integer, minimum: 1, maximum: 8, default: 8}
+      responses:
+        "200":
+          description: Ranked attack paths
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: "#/components/schemas/AttackPath"}
+  /findings:
+    get:
+      operationId: listFindings
+      summary: List findings by owner and minimum residual risk score
+      parameters:
+        - name: owner_id
+          in: query
+          schema: {type: string}
+        - name: min_score
+          in: query
+          schema: {type: number, minimum: 0, maximum: 100, default: 0}
+      responses:
+        "200": {description: Finding results}
+components:
+  schemas:
+    Evidence:
+      type: object
+      required: [source_system, source_record_id, observed_at, collected_at, collector_version]
+      properties:
+        source_system: {type: string}
+        source_record_id: {type: string}
+        observed_at: {type: string, format: date-time}
+        collected_at: {type: string, format: date-time}
+        collector_version: {type: string}
+        source_uri: {type: [string, "null"]}
+    Entity:
+      type: object
+      required: [id, entity_type, properties, evidence]
+      properties:
+        id: {type: string}
+        entity_type: {type: string}
+        properties: {type: object, additionalProperties: true}
+        evidence: {$ref: "#/components/schemas/Evidence"}
+        freshness_status: {type: string, enum: [current, warning, stale, unknown]}
+    AttackPath:
+      type: object
+      required: [path_id, score, score_version, entry, target, hops, freshness_status]
+      properties:
+        path_id: {type: string}
+        score: {type: number, minimum: 0, maximum: 100}
+        score_version: {type: string}
+        entry: {type: object, additionalProperties: true}
+        target: {type: object, additionalProperties: true}
+        hops:
+          type: array
+          maxItems: 8
+          items: {type: object, additionalProperties: true}
+        freshness_status: {type: string, enum: [current, warning, stale, unknown]}
+        conflicts:
+          type: array
+          items: {type: object, additionalProperties: true}

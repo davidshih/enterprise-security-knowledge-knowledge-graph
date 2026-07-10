@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="金融業企業安全知識圖譜：從 AWS、Snyk、Entra ID 與 ServiceNow 建立可驗證的攻擊路徑與證據鏈。"
+    />
+    <meta name="theme-color" content="#08110f" />
+    <title>Enterprise Security Knowledge Graph</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">跳到主要內容</a>
+
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="回到首頁">
+        <span class="brand-mark" aria-hidden="true">SG</span>
+        <span>
+          <strong>Security Graph</strong>
+          <small>Evidence-backed knowledge base</small>
+        </span>
+      </a>
+      <div class="topbar-actions">
+        <label class="search-shell" for="site-search">
+          <span aria-hidden="true">⌕</span>
+          <input id="site-search" type="search" placeholder="搜尋模型、來源、控制…" autocomplete="off" />
+          <kbd>/</kbd>
+        </label>
+        <a class="ghost-button" href="./knowledge/PLAN.md">完整計畫</a>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="side-nav">
+          選單
+        </button>
+      </div>
+    </header>
+
+    <div class="page-shell" id="top">
+      <aside class="sidebar" id="side-nav">
+        <nav aria-label="知識庫章節">
+          <p class="nav-label">Knowledge base</p>
+          <a class="nav-link active" href="#overview"><span>01</span>總覽</a>
+          <a class="nav-link" href="#use-cases"><span>02</span>核心使用案例</a>
+          <a class="nav-link" href="#model"><span>03</span>圖譜資料模型</a>
+          <a class="nav-link" href="#ingestion"><span>04</span>資料來源</a>
+          <a class="nav-link" href="#architecture"><span>05</span>AWS 架構</a>
+          <a class="nav-link" href="#storage"><span>06</span>儲存選型</a>
+          <a class="nav-link" href="#risk"><span>07</span>風險與路徑</a>
+          <a class="nav-link" href="#roadmap"><span>08</span>Roadmap</a>
+          <a class="nav-link" href="#run"><span>09</span>開始執行</a>
+        </nav>
+
+        <div class="sidebar-note">
+          <span class="pulse" aria-hidden="true"></span>
+          <div>
+            <strong>Version 0.1</strong>
+            <p>最後更新：2026-07-10</p>
+          </div>
+        </div>
+      </aside>
+
+      <main id="main">
+        <section class="hero searchable-section" id="overview" data-search="總覽 evidence attack path aws snyk entra pci">
+          <div class="eyebrow"><span>金融業 AppSec × Cloud Security</span><i></i><span>Living blueprint</span></div>
+          <h1>把散落的安全訊號，<br /><em>連成可驗證的風險路徑。</em></h1>
+          <p class="hero-copy">
+            以 AWS 多帳號、Snyk Enterprise、Entra ID 與 ServiceNow 為第一條薄切，建立能回答
+            「誰能從哪裡、經過什麼權限、碰到哪些關鍵資料」的企業安全知識圖譜。
+          </p>
+          <div class="hero-actions">
+            <a class="primary-button" href="#run">執行 MVP</a>
+            <a class="text-button" href="#architecture">看技術架構 <span>→</span></a>
+          </div>
+
+          <div class="signal-grid" aria-label="專案關鍵指標">
+            <article>
+              <strong>4</strong>
+              <span>第一波資料來源</span>
+              <small>AWS · Snyk · Entra · ServiceNow</small>
+            </article>
+            <article>
+              <strong>100%</strong>
+              <span>節點與關係證據覆蓋</span>
+              <small>沒有 evidence 就不是事實</small>
+            </article>
+            <article>
+              <strong>≤ 8</strong>
+              <span>Attack path 最大 hops</span>
+              <small>Bounded traversal，拒絕圖爆炸</small>
+            </article>
+            <article>
+              <strong>24h</strong>
+              <span>P0 freshness SLO</span>
+              <small>過期資料不更新風險排名</small>
+            </article>
+          </div>
+
+          <div class="north-star">
+            <div class="north-star-label">North-star question</div>
+            <p>
+              哪些 Internet-exposed production workloads 存在高風險 finding，且能經由高權限身分
+              觸達 PCI／critical data？每一條邊是否都有來源、觀測時間與 collector version？
+            </p>
+          </div>
+        </section>
+
+        <section class="content-section searchable-section" id="use-cases" data-search="使用案例 finding owner identity residual access control evidence secret sentinel incident">
+          <div class="section-heading">
+            <div><span class="section-number">02</span><p class="kicker">Decisions, not decoration</p></div>
+            <h2>先回答會改變行動的問題</h2>
+            <p>圖譜不是比較潮的 CMDB。每個 use case 都必須連到一個能執行的安全決策。</p>
+          </div>
+
+          <div class="case-grid">
+            <article class="case-card featured">
+              <div class="card-top"><span class="priority p0">P0</span><span class="domain">APPSEC</span></div>
+              <h3>Finding → Workload → PCI data</h3>
+              <p>把弱點嚴重度與暴露面、business criticality、身分可達性合併，先修真正能形成路徑的洞。</p>
+              <div class="path-strip" aria-label="攻擊路徑示意">
+                <span>Internet</span><i>→</i><span>Workload</span><i>→</i><span>Data</span>
+              </div>
+            </article>
+            <article class="case-card">
+              <div class="card-top"><span class="priority p0">P0</span><span class="domain">IAM</span></div>
+              <h3>Identity → Privileged role → Crown jewel</h3>
+              <p>找出群組、service principal、AWS role 與 SaaS entitlement 形成的間接管理權。</p>
+            </article>
+            <article class="case-card">
+              <div class="card-top"><span class="priority p0">P0</span><span class="domain">OWNERSHIP</span></div>
+              <h3>Finding → Repo → Owner</h3>
+              <p>把 Snyk finding 連回 repo、pipeline、deployed workload 與 application owner，避免工單流浪。</p>
+            </article>
+            <article class="case-card">
+              <div class="card-top"><span class="priority p1">P1</span><span class="domain">JML</span></div>
+              <h3>Mover／Leaver residual access</h3>
+              <p>以 Workday 狀態為權威來源，列出已離職或轉職人員仍保留的高風險存取。</p>
+            </article>
+            <article class="case-card">
+              <div class="card-top"><span class="priority p1">P1</span><span class="domain">GRC</span></div>
+              <h3>Control → Evidence → Framework</h3>
+              <p>讓 PCI、NYDFS、GLBA、SOX 控制覆蓋可抽樣、可追溯，也能看見證據是否過期。</p>
+            </article>
+            <article class="case-card">
+              <div class="card-top"><span class="priority p1">P1</span><span class="domain">SOC</span></div>
+              <h3>Incident context enrichment</h3>
+              <p>讓 Sentinel incident 快速取得 identity、asset、known weakness 與 owner 脈絡。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section searchable-section" id="model" data-search="資料模型 entity relationship identity workload finding control datastore secret evidence">
+          <div class="section-heading split-heading">
+            <div>
+              <span class="section-number">03</span>
+              <p class="kicker">Canonical graph model</p>
+              <h2>身分、資產、資料與控制都是一等公民</h2>
+            </div>
+            <p>名稱只能拿來看，不能拿來亂 merge。Canonical ID 優先使用 ARN、object ID、sys_id 等強識別值。</p>
+          </div>
+
+          <div class="model-board">
+            <div class="model-column">
+              <p>IDENTITY</p>
+              <div class="entity-node cyan"><span>ID</span><strong>Identity</strong><small>User · Group · SP</small></div>
+              <div class="relationship-tag">ASSUMES / GRANTS</div>
+              <div class="entity-node"><span>RL</span><strong>Role</strong><small>AWS · SaaS · DB</small></div>
+            </div>
+            <div class="model-connector"><span>CAN_ACCESS</span><i>→</i></div>
+            <div class="model-column">
+              <p>RUNTIME</p>
+              <div class="entity-node green"><span>WK</span><strong>Workload</strong><small>App · Service · Job</small></div>
+              <div class="relationship-tag">DEPENDS_ON</div>
+              <div class="entity-node"><span>CR</span><strong>Cloud resource</strong><small>AWS · K8s · SaaS</small></div>
+            </div>
+            <div class="model-connector"><span>STORES_DATA_IN</span><i>→</i></div>
+            <div class="model-column">
+              <p>IMPACT</p>
+              <div class="entity-node amber"><span>DS</span><strong>Data store</strong><small>PCI · Critical</small></div>
+              <div class="relationship-tag">AFFECTS / MITIGATES</div>
+              <div class="dual-node">
+                <div class="entity-node compact red"><span>FN</span><strong>Finding</strong></div>
+                <div class="entity-node compact"><span>CT</span><strong>Control</strong></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="principle-row">
+            <article><span>01</span><h3>Evidence first</h3><p>每個 node 與 edge 必須附來源、record ID、觀測時間與 collector version。</p></article>
+            <article><span>02</span><h3>Temporal by design</h3><p>保留 valid time、first/last seen 與 tombstone，才能回答「昨天誰還有權限」。</p></article>
+            <article><span>03</span><h3>No secret values</h3><p>只存 secret reference、owner、rotation metadata 與 usage edge。</p></article>
+          </div>
+        </section>
+
+        <section class="content-section searchable-section" id="ingestion" data-search="資料來源 ingestion aws organizations config security hub snyk entra service now sentinel snowflake adaptive shield m365 intune workday kubernetes">
+          <div class="section-heading split-heading">
+            <div><span class="section-number">04</span><p class="kicker">Ingestion waves</p><h2>來源按問題價值排序，不按廠商 logo 數量</h2></div>
+            <p>先接能完成 P0 attack path 的四個系統。一次接十五套 SaaS，通常只會得到資料很多、答案不可信的圖垃圾山。</p>
+          </div>
+
+          <div class="wave-list">
+            <article>
+              <div class="wave-index"><span>WAVE</span><strong>01</strong></div>
+              <div><h3>資產、弱點、身分</h3><p>AWS Organizations · Config · Security Hub · Snyk Enterprise · Entra ID</p></div>
+              <div class="wave-output"><span>OUTPUT</span><strong>可用的 P0 graph spine</strong></div>
+            </article>
+            <article>
+              <div class="wave-index"><span>WAVE</span><strong>02</strong></div>
+              <div><h3>業務脈絡、控制、事件</h3><p>ServiceNow · Sentinel · Splunk crosswalk · Snowflake</p></div>
+              <div class="wave-output"><span>OUTPUT</span><strong>Owner、criticality、evidence</strong></div>
+            </article>
+            <article>
+              <div class="wave-index"><span>WAVE</span><strong>03</strong></div>
+              <div><h3>SaaS 與 runtime</h3><p>Adaptive Shield · M365 · Intune · Workday · Kubernetes · Registry</p></div>
+              <div class="wave-output"><span>OUTPUT</span><strong>JML、posture、runtime path</strong></div>
+            </article>
+            <article>
+              <div class="wave-index"><span>WAVE</span><strong>04</strong></div>
+              <div><h3>Citizen development</h3><p>Power Platform · Salesforce · UiPath</p></div>
+              <div class="wave-output"><span>OUTPUT</span><strong>Shadow automation governance</strong></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section searchable-section" id="architecture" data-search="aws python architecture s3 sqs ecs fargate eventbridge lambda kms private link sentinel cloudwatch">
+          <div class="section-heading">
+            <div><span class="section-number">05</span><p class="kicker">AWS + Python reference architecture</p></div>
+            <h2>Raw data 可重播，canonical graph 才能被信任</h2>
+            <p>Collectors 與 graph backend 解耦；每一輪 ingestion 都經過 immutable raw zone、normalization、resolution 與 quality gate。</p>
+          </div>
+
+          <div class="architecture-flow" aria-label="AWS 技術架構流程">
+            <div class="flow-stage source-stage"><small>SOURCES</small><strong>AWS · SaaS · SDLC</strong><span>Read-only APIs</span></div>
+            <i>→</i>
+            <div class="flow-stage"><small>COLLECT</small><strong>Python adapters</strong><span>EventBridge + ECS</span></div>
+            <i>→</i>
+            <div class="flow-stage"><small>EVIDENCE</small><strong>S3 raw zone</strong><span>Immutable manifests</span></div>
+            <i>→</i>
+            <div class="flow-stage highlight"><small>TRUST GATE</small><strong>Normalize + Resolve</strong><span>Schema · RI · Freshness</span></div>
+            <i>→</i>
+            <div class="flow-stage"><small>SERVE</small><strong>Graph + API</strong><span>Paths · Evidence · Risk</span></div>
+          </div>
+
+          <div class="quality-grid">
+            <div><span>Schema validity</span><strong>100%</strong><i style="--score: 100%"></i></div>
+            <div><span>Evidence coverage</span><strong>100%</strong><i style="--score: 100%"></i></div>
+            <div><span>Owner coverage</span><strong>≥95%</strong><i style="--score: 95%"></i></div>
+            <div><span>Criticality coverage</span><strong>≥90%</strong><i style="--score: 90%"></i></div>
+            <div><span>Dangling edges</span><strong>0</strong><i style="--score: 100%"></i></div>
+            <div><span>P0 source freshness</span><strong>≤24h</strong><i style="--score: 92%"></i></div>
+          </div>
+        </section>
+
+        <section class="content-section searchable-section" id="storage" data-search="儲存 neo4j amazon neptune postgresql apache age graph database cypher gremlin sparql">
+          <div class="section-heading split-heading">
+            <div><span class="section-number">06</span><p class="kicker">Storage decision</p><h2>先 benchmark，再談信仰</h2></div>
+            <p>Local 用 canonical JSON 驗證契約；production 預設候選為 Neptune，Neo4j 與 AGE 依實測條件進場。</p>
+          </div>
+
+          <div class="table-wrap" role="region" aria-label="圖資料庫比較" tabindex="0">
+            <table>
+              <thead><tr><th>方案</th><th>最強項</th><th>主要代價</th><th>適用條件</th><th>決策</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Amazon Neptune</strong></td><td>AWS managed controls、VPC、KMS、IAM</td><td>openCypher 差異、低流量也有底價</td><td>小團隊、金融業 production</td><td><span class="decision preferred">預設候選</span></td></tr>
+                <tr><td><strong>Neo4j</strong></td><td>Cypher、GDS、分析工具成熟</td><td>License／vendor 與網路治理</td><td>Path analytics 生產力明顯勝出</td><td><span class="decision">Benchmark</span></td></tr>
+                <tr><td><strong>PostgreSQL + AGE</strong></td><td>SQL 與 graph 共存</td><td>Production extension、HA、patch 維運</td><td>已有可靠自管 PostgreSQL 平台</td><td><span class="decision caution">條件式</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="footnote">注意：不能假設 Amazon RDS PostgreSQL 可直接安裝任意 Apache AGE extension。免費 license 不等於免費營運，這個坑通常很會吃人月。</p>
+        </section>
+
+        <section class="content-section searchable-section" id="risk" data-search="風險 risk score severity exploitability exposure asset criticality identity reach control attack path">
+          <div class="section-heading split-heading">
+            <div><span class="section-number">07</span><p class="kicker">Explainable risk</p><h2>分數可以拆，路徑可以驗</h2></div>
+            <p>Risk score 不是 breach probability。每個 factor、control reduction 與 path evidence 都必須能被 reviewer 重建。</p>
+          </div>
+
+          <div class="risk-layout">
+            <article class="formula-card">
+              <div class="formula-head"><span>RISK MODEL v1</span><strong>0—100</strong></div>
+              <code>inherent = 0.25 × severity
+         + 0.20 × exploitability
+         + 0.20 × exposure
+         + 0.25 × asset_criticality
+         + 0.10 × identity_reach
+
+residual = inherent × (1 − 0.60 × control_reduction)</code>
+              <p>Control reduction 必須有新鮮證據，且最大折減 60%。簡報上畫了一個盾牌，不代表 critical finding 自動洗成 low。</p>
+            </article>
+            <article class="path-card">
+              <div class="path-card-head"><span>PATH · 07AF</span><span class="risk-score">86.4</span></div>
+              <div class="attack-path">
+                <div><i class="entry-dot"></i><span>ENTRY</span><strong>Public endpoint</strong><small>internet_exposed</small></div>
+                <b>↓</b>
+                <div><i></i><span>EXPLOIT</span><strong>payments-api</strong><small>High · PoC available</small></div>
+                <b>↓</b>
+                <div><i></i><span>PRIVILEGE</span><strong>prod-admin role</strong><small>CAN_ADMINISTER</small></div>
+                <b>↓</b>
+                <div><i class="target-dot"></i><span>TARGET</span><strong>cardholder-data</strong><small>PCI · Criticality 5</small></div>
+              </div>
+              <div class="evidence-status"><span><i></i>Evidence current</span><span>4 verified hops</span></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section searchable-section" id="roadmap" data-search="roadmap phase contract mvp business context runtime soc saas citizen development">
+          <div class="section-heading">
+            <div><span class="section-number">08</span><p class="kicker">Delivery roadmap</p></div>
+            <h2>每一階段都要交付可驗證的答案</h2>
+          </div>
+          <ol class="timeline">
+            <li class="current"><span>0</span><div><small>WEEK 0—2</small><h3>Contract & replayable skeleton</h3><p>Canonical schema、evidence envelope、stable IDs、fixtures、quality gates。</p></div><strong>NOW</strong></li>
+            <li><span>1</span><div><small>WEEK 3—8</small><h3>MVP thin slice</h3><p>AWS、Snyk、Entra adapters；三條 P0 queries；staging graph backend。</p></div></li>
+            <li><span>2</span><div><small>WEEK 9—14</small><h3>Business context & controls</h3><p>ServiceNow ownership、criticality、exception、GRC evidence mapping。</p></div></li>
+            <li><span>3</span><div><small>WEEK 15—22</small><h3>Runtime & SOC enrichment</h3><p>Kubernetes、Sentinel、Snowflake、privileged change deltas。</p></div></li>
+            <li><span>4</span><div><small>WEEK 23+</small><h3>SaaS & citizen development</h3><p>Adaptive Shield、M365、Workday、Power Platform、Salesforce、UiPath。</p></div></li>
+          </ol>
+        </section>
+
+        <section class="content-section run-section searchable-section" id="run" data-search="開始執行 quick start python make test lint demo github repository">
+          <div class="section-heading split-heading">
+            <div><span class="section-number">09</span><p class="kicker">Runnable today</p><h2>不是只有 plan，骨架現在就能跑</h2></div>
+            <p>Python standard library 即可完成 normalization、evidence validation、dangling-edge gate 與 MVP risk scoring。</p>
+          </div>
+
+          <div class="terminal-card">
+            <div class="terminal-bar"><span></span><span></span><span></span><strong>security-graph — zsh</strong></div>
+            <pre><code>git clone &lt;repository-url&gt;
+cd enterprise-security-knowledge-graph
+
+make test
+make lint
+make demo
+
+# Output
+# Wrote 4 entities and 3 relationships
+# to data/out/canonical_graph.json</code></pre>
+            <button class="copy-button" type="button" data-copy="make test\nmake lint\nmake demo">複製指令</button>
+          </div>
+
+          <div class="resource-grid">
+            <a href="./knowledge/PLAN.md"><span>PLAN</span><strong>完整執行計畫</strong><p>目標、架構、roadmap、驗收與 backlog</p><i>↗</i></a>
+            <a href="./knowledge/graph-model.yaml"><span>SCHEMA</span><strong>Canonical graph model</strong><p>實體、關係與 evidence contract</p><i>↗</i></a>
+            <a href="./knowledge/queries.cypher"><span>QUERIES</span><strong>Cypher examples</strong><p>Attack path、residual access、expired exception</p><i>↗</i></a>
+            <a href="./knowledge/openapi.yaml"><span>API</span><strong>OpenAPI contract</strong><p>Entity、neighbor、finding 與 path endpoints</p><i>↗</i></a>
+          </div>
+        </section>
+
+        <section class="empty-state" id="search-empty" hidden>
+          <span>⌕</span><h2>找不到符合內容</h2><p>換個關鍵字，或按 Esc 清除搜尋。</p>
+        </section>
+
+        <footer>
+          <div><span class="brand-mark small" aria-hidden="true">SG</span><p><strong>Enterprise Security Knowledge Graph</strong><br />Evidence first. Decisions second. Dashboard last.</p></div>
+          <p>Built as a versioned, extensible security knowledge base.</p>
+        </footer>
+      </main>
+    </div>
+    <div class="search-status" role="status" aria-live="polite"></div>
+  </body>
+</html>

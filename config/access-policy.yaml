@@ -1,0 +1,24 @@
+version: 1
+roles:
+  graph_ingestor:
+    permissions: [write_staging, write_evidence, submit_merge]
+    restrictions: [no_interactive_query, no_policy_change]
+  security_analyst:
+    permissions: [read_security_graph, run_saved_queries, create_case]
+    restrictions: [pii_masked, no_raw_secret_value]
+  app_owner:
+    permissions: [read_owned_assets, attest_ownership, dispute_finding]
+    restrictions: [owned_scope_only]
+  auditor:
+    permissions: [read_control_evidence, read_change_history, export_bounded_report]
+    restrictions: [read_only, pii_masked]
+  graph_admin:
+    permissions: [manage_schema, manage_saved_queries, approve_merge]
+    restrictions: [no_source_credential_access]
+  platform_admin:
+    permissions: [operate_pipeline, rotate_credentials, restore_backup]
+    restrictions: [no_risk_acceptance]
+
+separation_of_duties:
+  - [graph_ingestor, graph_admin]
+  - [platform_admin, risk_acceptor]

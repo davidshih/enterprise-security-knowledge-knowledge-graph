@@ -1,0 +1,70 @@
+version: 1
+defaults:
+  collection_mode: incremental
+  evidence_required: true
+  freshness_slo_hours: 24
+  quarantine_on_schema_error: true
+
+sources:
+  - id: aws-organizations
+    priority: 1
+    enabled: true
+    entities: [Organization, OrganizationalUnit, AwsAccount]
+    schedule: "0 */6 * * *"
+    auth: assume_role
+
+  - id: aws-config-securityhub
+    priority: 1
+    enabled: true
+    entities: [CloudResource, Finding, Control]
+    schedule: "0 * * * *"
+    auth: assume_role
+
+  - id: snyk-enterprise
+    priority: 1
+    enabled: true
+    entities: [Repository, Project, Component, Finding]
+    schedule: "15 * * * *"
+    auth: secret_reference
+
+  - id: entra-id
+    priority: 1
+    enabled: true
+    entities: [Identity, Group, ServicePrincipal, Role, Entitlement]
+    schedule: "30 */4 * * *"
+    auth: workload_identity
+
+  - id: service-now
+    priority: 2
+    enabled: false
+    entities: [Application, BusinessService, Owner, Exception, Ticket]
+    schedule: "0 */6 * * *"
+    auth: oauth_client
+
+  - id: sentinel
+    priority: 2
+    enabled: false
+    entities: [Alert, Incident, Detection]
+    schedule: "*/15 * * * *"
+    auth: workload_identity
+
+  - id: snowflake
+    priority: 2
+    enabled: false
+    entities: [DataStore, DataObject, Role, NetworkPolicy]
+    schedule: "0 */6 * * *"
+    auth: key_pair
+
+  - id: adaptive-shield
+    priority: 3
+    enabled: false
+    entities: [SaaSApplication, Control, Finding]
+    schedule: "0 */12 * * *"
+    auth: secret_reference
+
+  - id: enterprise-saas
+    priority: 3
+    enabled: false
+    entities: [M365Tenant, IntuneDevice, WorkdayWorker, SalesforceOrg, PowerPlatformEnvironment, UiPathTenant]
+    schedule: "0 */12 * * *"
+    auth: source_specific

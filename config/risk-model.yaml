@@ -1,0 +1,30 @@
+version: 1
+score_range: [0, 100]
+factors:
+  severity:
+    weight: 0.25
+    source: finding
+  exploitability:
+    weight: 0.20
+    source: threat_intelligence
+  exposure:
+    weight: 0.20
+    source: graph_path
+  asset_criticality:
+    weight: 0.25
+    source: service_now_or_owner_attestation
+  identity_reach:
+    weight: 0.10
+    source: graph_path
+control_reduction:
+  maximum_reduction: 0.60
+  requires_evidence: true
+bands:
+  critical: [80, 100]
+  high: [60, 79.9]
+  medium: [35, 59.9]
+  low: [0, 34.9]
+governance:
+  version_every_change: true
+  require_backtest: true
+  prohibit_black_box_override: true

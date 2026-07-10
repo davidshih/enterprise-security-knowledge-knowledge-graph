@@ -1,0 +1,53 @@
+version: 1
+identity_strategy: "sha256(entity_type|source_scoped_natural_key)"
+
+entity_types:
+  Organization: {required: [name]}
+  OrganizationalUnit: {required: [name]}
+  AwsAccount: {required: [name, environment]}
+  Application: {required: [name, owner_id, criticality]}
+  BusinessService: {required: [name, criticality]}
+  Workload: {required: [name, environment]}
+  CloudResource: {required: [provider, resource_type, resource_arn]}
+  Repository: {required: [provider, organization, name]}
+  Component: {required: [name, version, ecosystem]}
+  Pipeline: {required: [name, provider]}
+  Identity: {required: [display_name, identity_kind]}
+  Group: {required: [display_name]}
+  Role: {required: [name, role_type]}
+  Entitlement: {required: [name, action, resource_scope]}
+  Secret: {required: [secret_reference, secret_type]}
+  DataStore: {required: [name, platform, classification]}
+  Finding: {required: [title, severity, status]}
+  Control: {required: [control_id, framework, status]}
+  Exception: {required: [status, expires_at, approver_id]}
+  Incident: {required: [title, severity, status]}
+  Owner: {required: [display_name, owner_type]}
+
+relationship_types:
+  CONTAINS: {from: [Organization, OrganizationalUnit, AwsAccount], to: [OrganizationalUnit, AwsAccount, CloudResource]}
+  HOSTS: {from: [AwsAccount, CloudResource], to: [Workload, DataStore]}
+  DEPLOYS_TO: {from: [Pipeline, Repository], to: [Workload, CloudResource]}
+  DEPENDS_ON: {from: [Application, Workload, Component], to: [Application, Workload, Component, DataStore]}
+  RUNS_AS: {from: [Workload, Pipeline], to: [Identity]}
+  MEMBER_OF: {from: [Identity, Group], to: [Group]}
+  ASSUMES: {from: [Identity, Group, Role], to: [Role]}
+  GRANTS: {from: [Role, Group], to: [Entitlement]}
+  CAN_ACCESS: {from: [Identity, Role, Entitlement], to: [CloudResource, DataStore, Secret, Workload]}
+  CAN_ADMINISTER: {from: [Identity, Group, Role], to: [Application, Workload, CloudResource, DataStore]}
+  USES_SECRET: {from: [Workload, Pipeline, Repository], to: [Secret]}
+  STORES_DATA_IN: {from: [Application, Workload], to: [DataStore]}
+  AFFECTS: {from: [Finding], to: [Application, Workload, CloudResource, Repository, Component, Identity, DataStore]}
+  MITIGATES: {from: [Control], to: [Finding, CloudResource, Workload, Identity]}
+  EVIDENCES: {from: [Control], to: [Application, BusinessService, CloudResource, Identity]}
+  OWNED_BY: {from: [Application, BusinessService, Workload, DataStore], to: [Owner]}
+  SUPPORTS: {from: [Application, Workload], to: [BusinessService]}
+  EXCEPTS: {from: [Exception], to: [Finding, Control]}
+  OBSERVED_IN: {from: [Finding, Incident], to: [CloudResource, Workload, Identity]}
+
+universal_evidence_fields:
+  - source_system
+  - source_record_id
+  - observed_at
+  - collected_at
+  - collector_version
